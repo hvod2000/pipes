@@ -45,3 +45,22 @@ class PipeWithArgs(PipeWithKwargs):
             args = self.args_preproc(arg, *self.args)
             return self.function(*args, **self.kwargs)
         return self.function(arg, *self.args, **self.kwargs)
+
+
+def pipize(*args):
+    match args:
+        case f, args_size, args_preprocessor:
+            if args_size == 1:
+                if f.__code__.co_kwonlyargcount + len(f.__defaults__ or ()):
+                    return PipeWithKwargs(f)
+                return Pipe(f)
+            return PipeWithArgs(f, args_size, args_preprocessor)
+        case int(args_size), args_preprocessor:
+            return lambda f: pipize(f, args_size, args_preprocessor)
+        case f, int(args_size):
+            return pipize(f, args_size, None)
+        case int(args_size),:
+            return lambda f: pipize(f, args_size, None)
+        case f,:
+            args_size = f.__code__.co_argcount - len(f.__defaults__ or ())
+            return pipize(f, args_size, None)
