@@ -73,5 +73,6 @@ Iter.index = generator(generators.split)
 
 if __name__ == "__main__":
     import doctest
-
-    doctest.testfile(__file__.split("/")[-1].removesuffix("py") + "md")
+    module_name = __file__.split("/")[-1].removesuffix(".py")
+    doctest.testfile(module_name + ".md")
+    doctest.testfile(module_name + ".tests")

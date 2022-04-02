@@ -1,0 +1,29 @@
+>>> from myiters import Iter
+>>> lst100, lst5 = list(range(1, 101)), [1, 2, 3, 4, 5]
+>>> Iter(lst5).apply(lambda x, y: list(x) + [y], "end") / list
+[1, 2, 3, 4, 5, 'end']
+
+
+>>> iter1 = Iter(lst5)
+>>> iter2 = iter1
+>>> print(next(iter1), next(iter2))
+1 2
+
+>>> iter1 = Iter(lst5)
+>>> iter2 = iter1.copy()
+>>> print(next(iter1), next(iter2))
+1 1
+
+>>> def my_function(items):
+...     for item in items:
+...         print(item)
+...     yield from ()
+>>> it = Iter(range(2)).my_function()
+>>> _ = it.now()
+0
+1
+
+>>> it1 = iter(range(1, 5))
+>>> it2 = Iter(it1)
+>>> print(next(it1), next(it2), next(it1), next(it2))
+1 2 3 4
