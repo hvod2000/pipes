@@ -44,9 +44,9 @@ def generator(f):
 # itertools functionality
 Iter.accumulate = generator(itertools.accumulate)
 Iter.chain = generator(generators.chain)
-Iter.combinations = generator(itertools.combinations)
-Iter.combinations_with_repetition = generator(itertools.combinations_with_replacement)
-Iter.combinations_with_replacement = generator(itertools.combinations_with_replacement)
+Iter.combinations = generator(generators.combinations)
+Iter.combinations_with_repetition = generator(generators.combinations_with_repetition)
+Iter.combinations_with_replacement = generator(generators.combinations_with_repetition)
 Iter.compress = generator(itertools.compress)
 Iter.cycle = generator(itertools.cycle)
 Iter.skip_while = generator(generators.skip_while)

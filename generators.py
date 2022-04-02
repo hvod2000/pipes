@@ -16,6 +16,20 @@ def permutations_with_repetition(iterable, r):
     return itertools.product(iterable, repeat=r)
 
 
+def combinations(iterable, r=None):
+    if r is not None:
+        return itertools.combinations(iterable, r)
+    return (tuple(iterable) for _ in range(1))
+
+
+def combinations_with_repetition(iterable, r=None):
+    if r is not None:
+        yield from itertools.combinations_with_replacement(iterable, r)
+        return
+    lst = list(iterable)
+    yield from itertools.combinations_with_replacement(lst, len(lst))
+
+
 def accumulate(iterable, func=operator.add):
     return itertools.accumulate(iterable, func)
 
