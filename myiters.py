@@ -11,6 +11,9 @@ class Iter:
     def map(self, f):
         return Iter(map(f, self.iterator))
 
+    def __truediv__(self, f):
+        return f(self.iterator)
+
     def __getattr__(self, name):
         frame = inspect.currentframe()
         f = frame.f_back.f_locals.get(name, None)
@@ -31,11 +34,12 @@ if __name__ == "__main__":
 
     from math import isqrt
 
-    test1 = list(
+    test1 = (
         Iter(range(1, 11))
         .map(lambda x: x ** 2)
         .myfunction(default=0)
         .map(lambda x: isqrt(x))
+        / list
     )
     print(test1)
     assert test1 == [9, 10]
