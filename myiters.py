@@ -1,4 +1,5 @@
 import inspect
+import builtins
 import itertools
 import myitertools
 
@@ -7,11 +8,8 @@ class Iter:
     def __init__(self, iterator):
         self.iterator = iterator
 
-    def filter(self, f):
-        return Iter(filter(f, self.iterator))
-
-    def map(self, f):
-        return Iter(map(f, self.iterator))
+    def apply(self, f, *args, **kwargs):
+        return Iter(f(self.iterator, *args, **kwargs))
 
     def __truediv__(self, f):
         return f(self.iterator)
@@ -49,6 +47,14 @@ Iter.take_while = generator(itertools.takewhile)
 Iter.tee = generator(itertools.tee)
 Iter.zip_longest = generator(itertools.zip_longest)
 
+# builtins functionality
+Iter.take_if = lambda self, f: Iter(filter(f, self.iterator))
+Iter.filter = Iter.take_if
+Iter.map = lambda self, f: Iter(map(f, self.iterator))
+Iter.starmap = lambda self, f: self.map(lambda args: f(*args))
+Iter.reversed = generator(builtins.reversed)
+Iter.sorted = generator(builtins.sorted)
+Iter.zip = generator(builtins.zip)
 
 if __name__ == "__main__":
 
