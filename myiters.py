@@ -6,10 +6,17 @@ import myitertools
 
 class Iter:
     def __init__(self, iterator):
-        self.iterator = iterator
+        self.iterator = iter(iterator)
 
     def apply(self, f, *args, **kwargs):
         return Iter(f(self.iterator, *args, **kwargs))
+
+    def copy(self):
+        self.iterator, new_iter = itertools.tee(self)
+        return Iter(new_iter)
+
+    def now(self):
+        return Iter(list(self.iterator))
 
     def __truediv__(self, f):
         return f(self.iterator)
@@ -21,7 +28,10 @@ class Iter:
         return lambda *args, **kwargs: Iter(f(self.iterator, *args, **kwargs))
 
     def __iter__(self):
-        yield from self.iterator
+        return self.iterator
+
+    def __next__(self):
+        return next(self.iterator)
 
 
 def generator(f):
