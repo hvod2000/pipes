@@ -54,7 +54,7 @@ Iter.permutations = generator(itertools.permutations)
 Iter.permutations_with_repetition = generator(itertools.product)
 Iter.product = generator(itertools.product)
 Iter.take_while = generator(itertools.takewhile)
-Iter.tee = generator(itertools.tee)
+Iter.duplicate = generator(itertools.tee)
 Iter.zip_longest = generator(itertools.zip_longest)
 
 # builtins functionality
