@@ -1,5 +1,4 @@
 import inspect
-import builtins
 import itertools
 import generators
 
@@ -68,7 +67,7 @@ Iter.map = lambda self, f: Iter(map(f, self.iterator))
 Iter.starmap = lambda self, f: self.map(lambda args: f(*args))
 Iter.reversed = generator(generators.reversed)
 Iter.sorted = generator(generators.sorted)
-Iter.zip = generator(builtins.zip)
+Iter.zip = generator(generators.zip)
 
 # list functionality
 Iter.split = lambda *args: Iter(map(Iter, lazy(generators.split, *args)))
@@ -80,4 +79,4 @@ if __name__ == "__main__":
 
     module_name = __file__.split("/")[-1].removesuffix(".py")
     doctest.testfile(module_name + ".md")
-    doctest.testfile(module_name + ".tests")
+    doctest.testfile(module_name + ".tests.md")

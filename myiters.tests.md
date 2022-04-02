@@ -1,3 +1,5 @@
+# TESTS
+```python
 >>> from myiters import Iter
 >>> lst100, lst5 = list(range(1, 101)), [1, 2, 3, 4, 5]
 >>> Iter(lst5).apply(lambda x, y: list(x) + [y], "end") / list
@@ -120,3 +122,5 @@
 ...         print(f"{name}{args} failed!")
 ...         print(y0)
 ...         print(y1)
+
+```

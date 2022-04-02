@@ -22,7 +22,7 @@ def accumulate(iterable, func=operator.add):
 
 def chain(iterable, *iterables):
     if not len(iterables):
-        return itertools.chain.from_iterable(iterables)
+        return itertools.chain.from_iterable(iterable)
     return itertools.chain(iterable, *iterables)
 
 
@@ -47,6 +47,12 @@ def take_while(iterable, predicate):
 def group_by(iterable, key=None):
     for key, group in itertools.groupby(iterable, key):
         yield (key, tuple(group))
+
+
+def zip(iterable, *other_iterables):
+    if other_iterables:
+        return builtins.zip(iterable, *other_iterables)
+    return builtins.zip(*iterable)
 
 
 def reversed(iterable, key=None):
