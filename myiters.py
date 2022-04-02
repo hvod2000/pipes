@@ -1,7 +1,7 @@
 import inspect
 import builtins
 import itertools
-import myitertools
+import generators
 
 
 class Iter:
@@ -40,14 +40,14 @@ def generator(f):
 
 # itertools functionality
 Iter.accumulate = generator(itertools.accumulate)
-Iter.chain = generator(myitertools.chain)
+Iter.chain = generator(generators.chain)
 Iter.combinations = generator(itertools.combinations)
 Iter.combinations_with_repetition = generator(itertools.combinations_with_replacement)
 Iter.combinations_with_replacement = generator(itertools.combinations_with_replacement)
 Iter.compress = generator(itertools.compress)
 Iter.cycle = generator(itertools.cycle)
-Iter.skip_while = generator(myitertools.skip_while)
-Iter.skip_if = generator(myitertools.skip_if)
+Iter.skip_while = generator(generators.skip_while)
+Iter.skip_if = generator(generators.skip_if)
 Iter.group_by = generator(itertools.groupby)
 Iter.slice = generator(itertools.islice)
 Iter.permutations = generator(itertools.permutations)
@@ -65,6 +65,11 @@ Iter.starmap = lambda self, f: self.map(lambda args: f(*args))
 Iter.reversed = generator(builtins.reversed)
 Iter.sorted = generator(builtins.sorted)
 Iter.zip = generator(builtins.zip)
+
+# list functionality
+Iter.split = generator(generators.split)
+Iter.insert = generator(generators.split)
+Iter.index = generator(generators.split)
 
 if __name__ == "__main__":
 
