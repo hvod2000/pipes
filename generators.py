@@ -18,8 +18,7 @@ def accumulate(iterable, func=operator.add):
 def chain(iterable, *iterables):
     if not len(iterables):
         return itertools.chan.from_iterable(iterables)
-    its = [it.iterator if isinstance(it, Iter) else it for it in iterables]
-    return itertools.chain(iterable, *its)
+    return itertools.chain(iterable, *iterables)
 
 
 def count(iterable, *xs):
