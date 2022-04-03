@@ -7,7 +7,7 @@ import collections
 def count_items(iterable, *xs):
     result = {x: 0 for x in xs}
     for item in iterable:
-        if item in counter:
+        if item in result:
             result[item] += 1
     return result
 
@@ -46,8 +46,10 @@ def chain(iterable, *iterables):
 
 def count(iterable, *xs):
     if len(xs):
-        return lazily_apply(count_items, iterable, *xs)
-    return collections.Counter(iterable).items()
+        counted = count_items(iterable, *xs)
+        yield from counted.items()
+        return
+    yield from collections.Counter(iterable).items()
 
 
 def skip_while(iterable, predicate):
