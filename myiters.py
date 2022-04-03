@@ -38,7 +38,7 @@ def lazy(f, *args, **kwargs):
 
 
 def generator(f):
-    return lambda *args, **kwargs: Iter(lazy(f, *args, **kwargs))
+    return lambda *args, **kwargs: Iter(f(*args, **kwargs))
 
 
 # itertools functionality
@@ -53,9 +53,9 @@ Iter.skip_while = generator(generators.skip_while)
 Iter.skip_if = generator(generators.skip_if)
 Iter.group_by = generator(generators.group_by)
 Iter.slice = generator(itertools.islice)
-Iter.permutations = generator(itertools.permutations)
+Iter.permutations = generator(generators.permutations)
 Iter.permutations_with_repetition = generator(generators.permutations_with_repetition)
-Iter.product = generator(itertools.product)
+Iter.product = generator(generators.product)
 Iter.take_while = generator(generators.take_while)
 Iter.duplicate = generator(itertools.tee)
 Iter.zip_longest = generator(itertools.zip_longest)
@@ -70,7 +70,7 @@ Iter.sorted = generator(generators.sorted)
 Iter.zip = generator(generators.zip)
 
 # list functionality
-Iter.split = lambda *args: Iter(map(Iter, lazy(generators.split, *args)))
+Iter.split = lambda *args: Iter(map(Iter, generators.split(*args)))
 Iter.insert = generator(generators.insert)
 Iter.index = generator(generators.index)
 

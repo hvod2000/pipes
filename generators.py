@@ -12,6 +12,14 @@ def count_items(iterable, *xs):
     return result
 
 
+def product(*iterables, repeat=1):
+    yield from itertools.product(*iterables, repeat=repeat)
+
+
+def permutations(iterable, r=None):
+    yield from itertools.permutations(iterable, r)
+
+
 def permutations_with_repetition(iterable, r=None):
     if r is not None:
         yield from itertools.product(iterable, repeat=r)
@@ -22,8 +30,9 @@ def permutations_with_repetition(iterable, r=None):
 
 def combinations(iterable, r=None):
     if r is not None:
-        return itertools.combinations(iterable, r)
-    return (tuple(iterable) for _ in range(1))
+        yield from itertools.combinations(iterable, r)
+    else:
+        yield from (tuple(iterable) for _ in range(1))
 
 
 def combinations_with_repetition(iterable, r=None):
@@ -85,12 +94,12 @@ def sorted(iterable, key=None):
 
 def split(iterable, i):
     it1, it2 = itertools.tee(iterable)
-    return itertools.islice(it1, i), itertools.islice(it2, i, None)
+    yield from (itertools.islice(it1, i), itertools.islice(it2, i, None))
 
 
 def insert(iterable, i, x):
     it1, it2 = split(iterable, i)
-    return chain(it1, (x,), it2)
+    yield from chain(it1, (x,), it2)
 
 
 def index(iterable, x):
