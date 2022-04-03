@@ -12,8 +12,12 @@ def count_items(iterable, *xs):
     return result
 
 
-def permutations_with_repetition(iterable, r):
-    return itertools.product(iterable, repeat=r)
+def permutations_with_repetition(iterable, r=None):
+    if r is not None:
+        yield from itertools.product(iterable, repeat=r)
+        return
+    lst = list(iterable)
+    yield from itertools.product(lst, repeat=len(lst))
 
 
 def combinations(iterable, r=None):
