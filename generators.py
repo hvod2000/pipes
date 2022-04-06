@@ -73,6 +73,10 @@ def take_while(iterable, predicate):
     return itertools.takewhile(predicate, iterable)
 
 
+def take_if(iterable, predicate):
+    return builtins.filter(predicate, iterable)
+
+
 def group_by(iterable, key=None):
     for key, group in itertools.groupby(iterable, key):
         yield (key, tuple(group))
@@ -89,7 +93,7 @@ def reversed(iterable, key=None):
 
 
 def sorted(iterable, key=None):
-    yield from builtins.reversed(list(iterable))
+    yield from builtins.sorted(list(iterable))
 
 
 def split(iterable, i):
@@ -106,3 +110,7 @@ def index(iterable, x):
     for i, item in enumerate(iterable):
         if item == x:
             yield i
+
+
+def cycle(iterable):
+    return itertools.cycle(iterable)
