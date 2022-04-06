@@ -45,16 +45,22 @@ def generator(f):
 Iter.accumulate = generator(itertools.accumulate)
 Iter.chain = generator(generators.chain)
 Iter.combinations = generator(generators.combinations)
-Iter.combinations_with_repetition = generator(generators.combinations_with_repetition)
-Iter.combinations_with_replacement = generator(generators.combinations_with_repetition)
+Iter.combinations_with_repetition = generator(
+    generators.combinations_with_repetition
+)
+Iter.combinations_with_replacement = generator(
+    generators.combinations_with_repetition
+)
 Iter.compress = generator(itertools.compress)
 Iter.cycle = generator(itertools.cycle)
 Iter.skip_while = generator(generators.skip_while)
-Iter.skip_if = generator(generators.skip_if)
+Iter.skip_if = generator(generators.skip)
 Iter.group_by = generator(generators.group_by)
 Iter.slice = generator(itertools.islice)
 Iter.permutations = generator(generators.permutations)
-Iter.permutations_with_repetition = generator(generators.permutations_with_repetition)
+Iter.permutations_with_repetition = generator(
+    generators.permutations_with_repetition
+)
 Iter.product = generator(generators.product)
 Iter.take_while = generator(generators.take_while)
 Iter.duplicate = generator(itertools.tee)

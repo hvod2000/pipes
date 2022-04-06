@@ -81,7 +81,7 @@ def test_skip_while():
 
 
 def test_skip_if():
-    it = generators.skip_if(range(4), lambda x: x % 2 == 0)
+    it = generators.skip(range(4), lambda x: x % 2 == 0)
     assert list(it) == [1, 3]
 
 
@@ -166,7 +166,7 @@ def test_take_while():
 
 
 def test_take_if():
-    it = generators.take_if(range(1, 4), lambda x: x % 2 == 1)
+    it = generators.take(range(1, 4), lambda x: x % 2 == 1)
     assert list(it) == [1, 3]
 
 

@@ -65,16 +65,28 @@ def skip_while(iterable, predicate):
     return itertools.dropwhile(predicate, iterable)
 
 
-def skip_if(iterable, predicate):
-    return itertools.filterfalse(predicate, iterable)
+def skip(iterable, condition):
+    match condition:
+        case predicate if callable(predicate):
+            return itertools.filterfalse(predicate, iterable)
+        case int(size):
+            return itertools.islice(iterable, size, None)
+        case mask:
+            return itertools.compress(iterable, (not b for b in mask))
 
 
 def take_while(iterable, predicate):
     return itertools.takewhile(predicate, iterable)
 
 
-def take_if(iterable, predicate):
-    return builtins.filter(predicate, iterable)
+def take(iterable, condition):
+    match condition:
+        case predicate if callable(predicate):
+            return builtins.filter(predicate, iterable)
+        case int(size):
+            return itertools.islice(iterable, size)
+        case mask:
+            return itertools.compress(iterable, mask)
 
 
 def group_by(iterable, key=None):
