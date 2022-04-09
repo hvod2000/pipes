@@ -85,4 +85,3 @@ if __name__ == "__main__":
 
     module_name = __file__.split("/")[-1].removesuffix(".py")
     doctest.testfile(module_name + ".md")
-    doctest.testfile(module_name + ".tests.md")
