@@ -4,14 +4,6 @@ import builtins
 import collections
 
 
-def count_items(iterable, *xs):
-    result = {x: 0 for x in xs}
-    for item in iterable:
-        if item in result:
-            result[item] += 1
-    return result
-
-
 def product(*iterables, repeat=1):
     yield from itertools.product(*iterables, repeat=repeat)
 
@@ -55,8 +47,13 @@ def chain(iterable, *iterables):
 
 def count(iterable, *xs):
     if len(xs):
-        counted = count_items(iterable, *xs)
-        yield from counted.items()
+        def count_items(iterable, *xs):
+            counted = {x: 0 for x in xs}
+            for item in iterable:
+                if item in counted:
+                    counted[item] += 1
+            return counted
+        yield from count_items(iterable, *xs).items()
         return
     yield from collections.Counter(iterable).items()
 

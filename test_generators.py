@@ -1,4 +1,5 @@
 import generators
+import inspect
 
 
 def test_count():
@@ -80,9 +81,19 @@ def test_skip_while():
     assert list(it) == [1, 2, 3]
 
 
+def test_skip():
+    it = generators.skip(range(4), 2)
+    assert list(it) == [2, 3]
+
+
 def test_skip_if():
     it = generators.skip(range(4), lambda x: x % 2 == 0)
     assert list(it) == [1, 3]
+
+
+def test_skip_by_mask():
+    it = generators.skip(range(4), [0, 1, 0, 1])
+    assert list(it) == [0, 2]
 
 
 def test_group_by():
@@ -165,8 +176,18 @@ def test_take_while():
     assert list(it) == [0, 1]
 
 
+def test_take():
+    it = generators.take(range(1, 4), 2)
+    assert list(it) == [1, 2]
+
+
 def test_take_if():
     it = generators.take(range(1, 4), lambda x: x % 2 == 1)
+    assert list(it) == [1, 3]
+
+
+def test_take_by_mask():
+    it = generators.take(range(1, 4), [1, 0, 1])
     assert list(it) == [1, 3]
 
 
@@ -180,7 +201,7 @@ def test_sorted():
     assert list(it) == [5, 32, 789345]
 
 
-def test_split_into_two():
+def test_split():
     it1, it2 = generators.split(range(5), 2)
     assert list(it2) == [2, 3, 4]
     assert list(it1) == [0, 1]
@@ -194,3 +215,24 @@ def test_insert():
 def test_index():
     it = generators.index([1, 2, 3, 4, 5, 4, 3], 3)
     assert list(it) == [2, 6]
+
+
+def test_zip():
+    it = generators.zip([1, 2], ["odd", "even"])
+    assert list(it) == [(1, "odd"), (2, "even")]
+
+
+def test_zip_from_iterable():
+    it = generators.zip([[1, 2], ["odd", "even"]])
+    assert list(it) == [(1, "odd"), (2, "even")]
+
+
+def test_coverage_with_tests():
+    tests = {name for name, f in globals().items() if name.startswith("test_")}
+    covered_by_tests = {name.removeprefix("test_") for name in tests}
+    for function_name, f in generators.__dict__.items():
+        if not callable(f):
+            continue
+        if next(iter(inspect.signature(f).parameters.keys())) != "iterable":
+            continue
+        assert function_name in covered_by_tests
