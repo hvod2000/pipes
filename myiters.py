@@ -10,9 +10,11 @@ class Iter:
     def apply(self, f, *args, **kwargs):
         return Iter(f(self.iterator, *args, **kwargs))
 
-    def copy(self):
-        self.iterator, new_iter = itertools.tee(self)
-        return Iter(new_iter)
+    def copy(self, n=None):
+        if n is None:
+            self.iterator, new_iter = itertools.tee(self)
+            return Iter(new_iter)
+        return Iter(map(Iter, itertools.tee(self, n)))
 
     def now(self):
         return Iter(list(self.iterator))
@@ -42,7 +44,7 @@ def generator(f):
 
 
 # itertools functionality
-Iter.accumulate = generator(itertools.accumulate)
+Iter.accumulate = generator(generators.accumulate)
 Iter.chain = generator(generators.chain)
 Iter.combinations = generator(generators.combinations)
 Iter.combinations_with_repetition = generator(
@@ -51,20 +53,19 @@ Iter.combinations_with_repetition = generator(
 Iter.combinations_with_replacement = generator(
     generators.combinations_with_repetition
 )
-Iter.compress = generator(itertools.compress)
-Iter.cycle = generator(itertools.cycle)
+Iter.compress = generator(generators.take)
+Iter.cycle = generator(generators.cycle)
 Iter.skip_while = generator(generators.skip_while)
 Iter.skip_if = generator(generators.skip)
 Iter.group_by = generator(generators.group_by)
-Iter.slice = generator(itertools.islice)
+Iter.slice = generator(generators.slice)
 Iter.permutations = generator(generators.permutations)
 Iter.permutations_with_repetition = generator(
     generators.permutations_with_repetition
 )
 Iter.product = generator(generators.product)
 Iter.take_while = generator(generators.take_while)
-Iter.duplicate = generator(itertools.tee)
-Iter.zip_longest = generator(itertools.zip_longest)
+Iter.zip_longest = generator(generators.zip_longest)
 
 # builtins functionality
 Iter.take_if = lambda self, f: Iter(filter(f, self.iterator))

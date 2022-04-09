@@ -97,12 +97,30 @@ def zip(iterable, *other_iterables):
     return builtins.zip(*iterable)
 
 
+def zip_longest(iterable, *other_iterables):
+    if other_iterables:
+        return itertools.zip_longest(iterable, *other_iterables)
+    return itertools.zip_longest(*iterable)
+
+
 def reversed(iterable, key=None):
     yield from builtins.reversed(list(iterable))
 
 
 def sorted(iterable, key=None):
     yield from builtins.sorted(list(iterable))
+
+
+def slice(iterable, *args):
+    match args:
+        case [end]:
+            yield from (itertools.islice(iterable, None, end, 1))
+        case [start, end]:
+            yield from (itertools.islice(iterable, start, end, 1))
+        case [start, end, step]:
+            yield from (itertools.islice(iterable, start, end, step))
+        case _:
+            raise ValueError()
 
 
 def split(iterable, i):

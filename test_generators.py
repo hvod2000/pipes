@@ -218,13 +218,35 @@ def test_index():
 
 
 def test_zip():
-    it = generators.zip([1, 2], ["odd", "even"])
+    it = generators.zip([1, 2, 3], ["odd", "even"])
     assert list(it) == [(1, "odd"), (2, "even")]
 
 
 def test_zip_from_iterable():
-    it = generators.zip([[1, 2], ["odd", "even"]])
+    it = generators.zip([[1, 2, 3], ["odd", "even"]])
     assert list(it) == [(1, "odd"), (2, "even")]
+
+
+def test_zip_longest():
+    it = generators.zip([1, None], ["odd", "even"])
+    assert list(it) == [(1, "odd"), (None, "even")]
+
+
+def test_zip_longest_from_iterable():
+    it = generators.zip([[1, None], ["odd", "even"]])
+    assert list(it) == [(1, "odd"), (None, "even")]
+
+
+def test_slice():
+    y = list(generators.slice([1, 2, 3], 2))
+    correct = [1, 2]
+    assert y == correct
+    y = list(generators.slice([1, 2, 3], 1, 3))
+    correct = [2, 3]
+    assert y == correct
+    y = list(generators.slice([1, 2, 3], 0, 10, 2))
+    correct = [1, 3]
+    assert y == correct
 
 
 def test_coverage_with_tests():

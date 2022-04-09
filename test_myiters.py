@@ -231,9 +231,9 @@ def test_take_while():
     assert y == correct
 
 
-def test_duplicate():
+def test_copy_into_many():
     it1 = Iter([1, 2, 3])
-    it2, it3 = it1.duplicate()
+    it2, it3 = it1.copy(2)
     y = (next(it1), next(it2), next(it3))
     correct = (1, 2, 2)
     assert y == correct
