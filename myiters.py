@@ -26,6 +26,8 @@ class Iter:
         frame = inspect.currentframe()
         f = frame.f_back.f_locals.get(name, None)
         del frame
+        if f is None:
+            raise NameError(f"function {name}() is not defined")
         return lambda *args, **kwargs: Iter(f(self.iterator, *args, **kwargs))
 
     def __iter__(self):
@@ -34,54 +36,17 @@ class Iter:
     def __next__(self):
         return next(self.iterator)
 
-
-def lazy(f, *args, **kwargs):
-    yield from f(*args, **kwargs)
-
-
-def generator(f):
-    return lambda *args, **kwargs: Iter(f(*args, **kwargs))
+    @classmethod
+    def add_method(cls, name, f):
+        setattr(cls, name, lambda *args, **kwargs: Iter(f(*args, **kwargs)))
 
 
-# itertools functionality
-Iter.accumulate = generator(generators.accumulate)
-Iter.chain = generator(generators.chain)
-Iter.combinations = generator(generators.combinations)
-Iter.combinations_with_repetition = generator(
-    generators.combinations_with_repetition
-)
-Iter.combinations_with_replacement = generator(
-    generators.combinations_with_repetition
-)
-Iter.compress = generator(generators.take)
-Iter.take = generator(generators.take)
-Iter.cycle = generator(generators.cycle)
-Iter.skip_while = generator(generators.skip_while)
-Iter.skip_if = generator(generators.skip)
-Iter.skip = generator(generators.skip)
-Iter.group_by = generator(generators.group_by)
-Iter.slice = generator(generators.slice)
-Iter.permutations = generator(generators.permutations)
-Iter.permutations_with_repetition = generator(
-    generators.permutations_with_repetition
-)
-Iter.product = generator(generators.product)
-Iter.take_while = generator(generators.take_while)
-Iter.zip_longest = generator(generators.zip_longest)
-
-# builtins functionality
-Iter.take_if = lambda self, f: Iter(filter(f, self.iterator))
-Iter.filter = Iter.take_if
 Iter.map = lambda self, f: Iter(map(f, self.iterator))
-Iter.starmap = lambda self, f: self.map(lambda args: f(*args))
-Iter.reversed = generator(generators.reversed)
-Iter.sorted = generator(generators.sorted)
-Iter.zip = generator(generators.zip)
-
-# list functionality
+Iter.starmap = lambda self, f: Iter(map(lambda args: f(*args), self.iterator))
+for name, f in generators.__dict__.items():
+    if callable(f):
+        Iter.add_method(name, f)
 Iter.split = lambda *args: Iter(map(Iter, generators.split(*args)))
-Iter.insert = generator(generators.insert)
-Iter.index = generator(generators.index)
 
 if __name__ == "__main__":
     import doctest
