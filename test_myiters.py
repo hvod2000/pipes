@@ -95,15 +95,6 @@ def test_combinations_with_repetition_with_args():
     assert y == correct
 
 
-def test_compress():
-    y = Iter([1, 2, 3]).compress([0, 1]) / list
-    correct = [2]
-    assert y == correct
-    y = Iter([1, 2, 3]).compress([1, 0, 1, 1]) / list
-    correct = [1, 3]
-    assert y == correct
-
-
 def test_cycle():
     y = Iter([1, 2, 3]).cycle().slice(5) / list
     correct = [1, 2, 3, 1, 2]
@@ -116,10 +107,20 @@ def test_skip_while():
     assert y == correct
 
 
+def test_skip():
+    it = Iter(range(4)).skip(2)
+    assert list(it) == [2, 3]
+
+
 def test_skip_if():
-    y = Iter([1, 2, 3]).skip_if(lambda x: x == 2) / list
+    y = Iter([1, 2, 3]).skip(lambda x: x == 2) / list
     correct = [1, 3]
     assert y == correct
+
+
+def test_skip_by_mask():
+    it = Iter(range(4)).skip([0, 1, 0, 1])
+    assert list(it) == [0, 2]
 
 
 def test_group_by():
@@ -247,16 +248,20 @@ def test_zip_longest():
     assert y == correct
 
 
+def test_take():
+    it = Iter(range(1, 4)).take(2)
+    assert list(it) == [1, 2]
+
+
 def test_take_if():
-    y = Iter([1, 2, 3]).take_if(lambda x: x % 2 == 1) / list
+    y = Iter([1, 2, 3]).take(lambda x: x % 2 == 1) / list
     correct = [1, 3]
     assert y == correct
 
 
-def test_filter():
-    y = Iter([1, 2, 3]).filter(lambda x: x % 2 == 1) / list
-    correct = [1, 3]
-    assert y == correct
+def test_take_by_mask():
+    it = Iter(range(1, 4)).take([1, 0, 1])
+    assert list(it) == [1, 3]
 
 
 def test_map():
@@ -337,13 +342,13 @@ def test_simple_composition():
         it0.apply(lambda x, y, z=2: x, y=1, z=3)
         .accumulate(lambda x, y: y - 3)
         .chain(it0)
-        .compress([1] * 100)
+        .take([1] * 100)
         .skip_while(lambda x: x < 10)
-        .skip_if(lambda x: x % 3 == 0)
+        .skip(lambda x: x % 3 == 0)
         .group_by(lambda x: x // 10)
         .slice(5)
         .take_while(lambda x: x[0] < 4)
-        .take_if(lambda x: x[0] > 0)
+        .take(lambda x: x[0] > 0)
         .accumulate(lambda x, y: [0, x[1] + y[1]])
         .slice(2, 3)
         .map(lambda x: x[1])
@@ -357,7 +362,7 @@ def test_square():
     it0 = Iter(range(2 ** 32))
     it1 = (
         it0.map(lambda x: x - 9)
-        .take_if(lambda x: x % 2 == 1)
+        .take(lambda x: x % 2 == 1)
         .map(lambda x: (x, -x, x))
         .starmap(lambda x, y, z: sum([x, y, z]))
     )
@@ -376,10 +381,10 @@ def test_laziness():
             Iter.combinations_with_repetition,
             [3],
         ),
-        ("compress", Iter.compress, [[0, 1] * 2]),
+        ("compress", Iter.take, [[0, 1] * 2]),
         ("cycle", Iter.cycle, []),
         ("skip_while", Iter.skip_while, [lambda x: x[0] < 10]),
-        ("skip_if", Iter.skip_if, [lambda x: len(x)]),
+        ("skip", Iter.skip, [lambda x: len(x)]),
         ("group_by", Iter.group_by, []),
         ("slice", Iter.slice, [321]),
         ("permutations", Iter.permutations, [5]),
@@ -391,8 +396,7 @@ def test_laziness():
         ("product", Iter.product, [list(range(3))]),
         ("take_while", Iter.take_while, [lambda x: x]),
         ("zip_longest", Iter.zip_longest, [list(range(3))]),
-        ("take_if", Iter.take_if, [lambda x: x]),
-        ("filter", Iter.filter, [lambda x: x]),
+        ("take_if", Iter.take, [lambda x: x]),
         ("map", Iter.map, [lambda x: x]),
         ("starmap", Iter.starmap, [lambda x, y, z: (x + y, y + z, z + x)]),
         ("reversed", Iter.reversed, []),

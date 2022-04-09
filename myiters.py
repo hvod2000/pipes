@@ -54,9 +54,11 @@ Iter.combinations_with_replacement = generator(
     generators.combinations_with_repetition
 )
 Iter.compress = generator(generators.take)
+Iter.take = generator(generators.take)
 Iter.cycle = generator(generators.cycle)
 Iter.skip_while = generator(generators.skip_while)
 Iter.skip_if = generator(generators.skip)
+Iter.skip = generator(generators.skip)
 Iter.group_by = generator(generators.group_by)
 Iter.slice = generator(generators.slice)
 Iter.permutations = generator(generators.permutations)
