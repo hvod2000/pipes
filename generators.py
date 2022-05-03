@@ -20,11 +20,10 @@ def permutations_with_repetition(iterable, r=None):
     yield from itertools.product(lst, repeat=len(lst))
 
 
-def combinations(iterable, r=None):
-    if r is not None:
-        yield from itertools.combinations(iterable, r)
-    else:
-        yield from (tuple(iterable) for _ in range(1))
+def combinations(iterable, size=None):
+    lst = list(iterable)
+    size = size if size is not None else len(lst)
+    yield from itertools.combinations(lst, size)
 
 
 def combinations_with_repetition(iterable, size=None):
