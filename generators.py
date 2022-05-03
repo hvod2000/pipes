@@ -27,12 +27,10 @@ def combinations(iterable, r=None):
         yield from (tuple(iterable) for _ in range(1))
 
 
-def combinations_with_repetition(iterable, r=None):
-    if r is not None:
-        yield from itertools.combinations_with_replacement(iterable, r)
-        return
+def combinations_with_repetition(iterable, size=None):
     lst = list(iterable)
-    yield from itertools.combinations_with_replacement(lst, len(lst))
+    size = size if size is not None else len(lst)
+    yield from itertools.combinations_with_replacement(lst, size)
 
 
 def accumulate(iterable, func=operator.add, initial=None):
