@@ -12,12 +12,10 @@ def permutations(iterable, r=None):
     yield from itertools.permutations(iterable, r)
 
 
-def permutations_with_repetition(iterable, r=None):
-    if r is not None:
-        yield from itertools.product(iterable, repeat=r)
-        return
+def permutations_with_repetition(iterable, size=None):
     lst = list(iterable)
-    yield from itertools.product(lst, repeat=len(lst))
+    size = size if size is not None else len(lst)
+    yield from itertools.product(lst, repeat=size)
 
 
 def combinations(iterable, size=None):
