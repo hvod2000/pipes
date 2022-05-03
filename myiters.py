@@ -1,5 +1,6 @@
 import inspect
 import itertools
+import functools
 import generators
 
 
@@ -38,7 +39,8 @@ class Iter:
 
     @classmethod
     def add_method(cls, name, f):
-        setattr(cls, name, lambda *args, **kwargs: Iter(f(*args, **kwargs)))
+        m = functools.wraps(f)(lambda *args, **kwargs: Iter(f(*args, **kwargs)))
+        setattr(cls, name, m)
 
 
 Iter.map = lambda self, f: Iter(map(f, self.iterator))
