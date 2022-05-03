@@ -371,53 +371,39 @@ def test_square():
         assert it1.copy().slice(n) / sum == n ** 2
 
 
-def test_laziness():
-    for name, method, args, *postprocessings in (
-        ("accumulate", Iter.accumulate, []),
-        ("chain", Iter.chain, []),
-        ("combinations", Iter.combinations, [3]),
-        (
-            "combinations_with_repetition",
-            Iter.combinations_with_repetition,
-            [3],
-        ),
-        ("compress", Iter.take, [[0, 1] * 2]),
-        ("cycle", Iter.cycle, []),
-        ("skip_while", Iter.skip_while, [lambda x: x[0] < 10]),
-        ("skip", Iter.skip, [lambda x: len(x)]),
-        ("group_by", Iter.group_by, []),
-        ("slice", Iter.slice, [321]),
-        ("permutations", Iter.permutations, [5]),
-        (
-            "permutations_with_repetition",
-            Iter.permutations_with_repetition,
-            [5],
-        ),
-        ("product", Iter.product, [list(range(3))]),
-        ("take_while", Iter.take_while, [lambda x: x]),
-        ("zip_longest", Iter.zip_longest, [list(range(3))]),
-        ("take_if", Iter.take, [lambda x: x]),
-        ("map", Iter.map, [lambda x: x]),
-        ("starmap", Iter.starmap, [lambda x, y, z: (x + y, y + z, z + x)]),
-        ("reversed", Iter.reversed, []),
-        ("sorted", Iter.sorted, []),
-        ("zip", Iter.zip, [list(range(4))]),
-        ("split", Iter.split, [4], lambda x: [list(x) for x in x]),
-        ("insert", Iter.insert, [2, "I AM HERE"]),
-        ("index", Iter.index, [[15, 16, 17]]),
-    ):
-        lst = [list(range(i * 3, (i + 1) * 3)) for i in range(10)]
-        it1 = Iter(lst)
-        y0 = method(it1.copy().slice(2, None), *args).slice(10) / list
-        for post in postprocessings:
-            y0 = post(y0)
-        it2 = method(it1, *args)
-        _ = it1.slice(0, 2).now()
-        y1 = it2.slice(10) / list
-        for post in postprocessings:
-            y1 = post(y1)
-        if y0 != y1:
-            print(f"{name}{args} failed!")
-            print(y0)
-            print(y1)
-            assert y0 == y1
+@pytest.mark.parametrize(
+    "method, args",
+    [
+        (Iter.accumulate, []),
+        (Iter.chain, []),
+        (Iter.combinations, [3]),
+        (Iter.combinations_with_repetition, [3],),
+        (Iter.take, [[0, 1] * 2]),
+        (Iter.cycle, []),
+        (Iter.skip_while, [lambda x: x[0] < 10]),
+        (Iter.skip, [lambda x: len(x)]),
+        (Iter.group_by, []),
+        (Iter.slice, [321]),
+        (Iter.permutations, [5]),
+        (Iter.permutations_with_repetition, [5],),
+        (Iter.product, [list(range(3))]),
+        (Iter.take_while, [lambda x: x]),
+        (Iter.zip_longest, [list(range(3))]),
+        (Iter.take, [lambda x: x]),
+        (Iter.map, [lambda x: x]),
+        (Iter.starmap, [lambda x, y, z: (x + y, y + z, z + x)]),
+        (Iter.reversed, []),
+        (Iter.sorted, []),
+        (Iter.zip, [list(range(4))]),
+        (Iter.insert, [2, "I AM HERE"]),
+        (Iter.index, [[15, 16, 17]]),
+    ],
+)
+def test_laziness(method, args):
+    lst = [list(range(i * 3, (i + 1) * 3)) for i in range(10)]
+    it1 = Iter(lst)
+    y0 = method(it1.copy().slice(2, None), *args).slice(10) / list
+    it2 = method(it1, *args)
+    _ = it1.slice(0, 2).now()
+    y1 = it2.slice(10) / list
+    assert y0 == y1
