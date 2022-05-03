@@ -38,16 +38,18 @@ class Iter:
         return next(self.iterator)
 
     @classmethod
-    def add_method(cls, name, f):
+    def add_method(cls, f):
         m = functools.wraps(f)(lambda *args, **kwargs: Iter(f(*args, **kwargs)))
-        setattr(cls, name, m)
+        if hasattr(cls, f.__name__):
+            raise NameError(f"method {f.__name__}() is already defined")
+        setattr(cls, f.__name__, m)
 
 
 Iter.map = lambda self, f: Iter(map(f, self.iterator))
 Iter.starmap = lambda self, f: Iter(map(lambda args: f(*args), self.iterator))
 for name, f in generators.__dict__.items():
     if callable(f):
-        Iter.add_method(name, f)
+        Iter.add_method(f)
 Iter.split = lambda *args: Iter(map(Iter, generators.split(*args)))
 
 if __name__ == "__main__":
