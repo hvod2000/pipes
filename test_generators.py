@@ -1,5 +1,4 @@
 import generators
-import inspect
 
 
 def test_count():
@@ -250,11 +249,6 @@ def test_slice():
 
 
 def test_coverage_with_tests():
-    tests = {name for name, f in globals().items() if name.startswith("test_")}
-    covered_by_tests = {name.removeprefix("test_") for name in tests}
     for function_name, f in generators.__dict__.items():
-        if not callable(f):
-            continue
-        if next(iter(inspect.signature(f).parameters.keys())) != "iterable":
-            continue
-        assert function_name in covered_by_tests
+        if callable(f) and "iterable" in f.__code__.co_varnames:
+            assert "test_" + function_name in globals()
